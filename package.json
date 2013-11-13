@@ -14,10 +14,19 @@
     "fs",
     "mac"
   ],
-  "author": "Keichi Takahashi <keichi.t@me.com>",
+  "author": {
+    "name" : "Keichi Takahashi",
+    "email" : "keichi.t@me.com",
+    "url" : "http://blog.keichi.net/"
+  },
   "license": "MIT",
   "gypfile": true,
   "devDependencies": {
     "mocha": "~1.14.0"
-  }
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "http://github.com/Keichi/osx-tag.git"
+  },
+  "bugs" : "http://github.com/Keichi/osx-tag/issues"
 }
