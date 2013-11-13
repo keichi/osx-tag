@@ -1,0 +1,23 @@
+{
+  "name": "osx-tag",
+  "version": "0.1.0",
+  "description": "A module to operate tags on OSX Mavericks",
+  "main": "build/Release/osx_tag",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "install": "node-gyp rebuild"
+  },
+  "keywords": [
+    "tag",
+    "osx",
+    "system",
+    "fs",
+    "mac"
+  ],
+  "author": "Keichi Takahashi <keichi.t@me.com>",
+  "license": "MIT",
+  "gypfile": true,
+  "devDependencies": {
+    "mocha": "~1.14.0"
+  }
+}
