@@ -7,9 +7,9 @@
 
 using namespace v8;
 
-class GetTagsWorker : public NanAsyncWorker {
+class GetTagsWorker : public Nan::AsyncWorker {
 public:
-    GetTagsWorker(NanCallback *callback, const char *path) : NanAsyncWorker(callback), path(path) {}
+    GetTagsWorker(Nan::Callback *callback, const char *path) : Nan::AsyncWorker(callback), path(path) {}
     ~GetTagsWorker() {}
 
     void Execute()
@@ -30,25 +30,25 @@ public:
 
     void HandleOKCallback()
     {
-        NanScope();
+        Nan::HandleScope scope;
 
-        Handle<Value> args[2] = { NanNull(), NanNew<v8::Array>([this->tags count]) };
+        v8::Local<v8::Value> info[2] = { Nan::Null(), Nan::New<v8::Array>([this->tags count]) };
 
         int i = 0;
         for (NSString *item in this->tags) {
-            args[1].As<Array>()->Set(i++, NanNew([item UTF8String]));
+            info[1].As<Array>()->Set(i++, Nan::New([item UTF8String]).ToLocalChecked());
         }
 
-        callback->Call(2, args);
+        callback->Call(2, info);
     }
 private:
     NSMutableSet *tags;
     const char *path;
 };
 
-class SetTagsWorker : public NanAsyncWorker {
+class SetTagsWorker : public Nan::AsyncWorker {
 public:
-    SetTagsWorker(NanCallback *callback, const char *path, NSMutableSet *tags) : NanAsyncWorker(callback), path(path), tags(tags) {}
+    SetTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~SetTagsWorker() {}
 
     void Execute()
@@ -66,25 +66,25 @@ public:
 
     void HandleOKCallback()
     {
-        NanScope();
+        Nan::HandleScope scope;
 
-        Handle<Value> args[2] = { NanNull(), NanNew<v8::Array>([this->tags count]) };
+        v8::Local<v8::Value> info[2] = { Nan::Null(), Nan::New<v8::Array>([this->tags count]) };
 
         int i = 0;
         for (NSString *item in this->tags) {
-            args[1].As<Array>()->Set(i++, NanNew([item UTF8String]));
+            info[1].As<Array>()->Set(i++, Nan::New([item UTF8String]).ToLocalChecked());
         }
 
-        callback->Call(2, args);
+        callback->Call(2, info);
     }
 private:
     const char *path;
     NSMutableSet *tags;
 };
 
-class AddTagsWorker : public NanAsyncWorker {
+class AddTagsWorker : public Nan::AsyncWorker {
 public:
-    AddTagsWorker(NanCallback *callback, const char *path, NSMutableSet *tags) : NanAsyncWorker(callback), path(path), tags(tags) {}
+    AddTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~AddTagsWorker() {}
 
     void Execute()
@@ -116,9 +116,9 @@ private:
     NSMutableSet *tags;
 };
 
-class RemoveTagsWorker : public NanAsyncWorker {
+class RemoveTagsWorker : public Nan::AsyncWorker {
 public:
-    RemoveTagsWorker(NanCallback *callback, const char *path, NSMutableSet *tags) : NanAsyncWorker(callback), path(path), tags(tags) {}
+    RemoveTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~RemoveTagsWorker() {}
 
     void Execute()
@@ -152,55 +152,62 @@ private:
 
 NAN_METHOD(getTags)
 {
-    NanScope();
+    Nan::HandleScope scope;
 
-    if (args.Length() < 2) {
-        NanThrowTypeError("Wrong number of arguments");
-        NanReturnUndefined();
+    if (info.Length() < 2) {
+        Nan::ThrowTypeError("Wrong number of arguments");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[0]->IsString()) {
-        NanThrowTypeError("Path must be a string");
-        NanReturnUndefined();
+    if (!info[0]->IsString()) {
+        Nan::ThrowTypeError("Path must be a string");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[1]->IsFunction()) {
-        NanThrowTypeError("Callback must be a function");
-        NanReturnUndefined();
+    if (!info[1]->IsFunction()) {
+        Nan::ThrowTypeError("Callback must be a function");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(args[0]).length()], *(String::Utf8Value(args[0])));
-    NanCallback *callback = new NanCallback(args[1].As<Function>());
+    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Callback *callback = new Nan::Callback(info[1].As<Function>());
 
-    NanAsyncQueueWorker(new GetTagsWorker(callback, path));
+    Nan::AsyncQueueWorker(new GetTagsWorker(callback, path));
 
-    NanReturnUndefined();
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
 NAN_METHOD(setTags)
 {
-    NanScope();
+    Nan::HandleScope scope;
 
-    if (args.Length() < 2) {
-        NanThrowTypeError("Wrong number of arguments");
-        NanReturnUndefined();
+    if (info.Length() < 2) {
+        Nan::ThrowTypeError("Wrong number of arguments");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[0]->IsString()) {
-        NanThrowTypeError("Path must be a string");
-        NanReturnUndefined();
+    if (!info[0]->IsString()) {
+        Nan::ThrowTypeError("Path must be a string");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[1]->IsArray()) {
-        NanThrowTypeError("Tags must be an array");
-        NanReturnUndefined();
+    if (!info[1]->IsArray()) {
+        Nan::ThrowTypeError("Tags must be an array");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (args.Length() >= 3 && !args[2]->IsFunction()) {
-        NanThrowTypeError("Callback must be a function");
-        NanReturnUndefined();
+    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+        Nan::ThrowTypeError("Callback must be a function");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(args[0]).length()], *(String::Utf8Value(args[0])));
-    NanCallback *callback = new NanCallback(args[2].As<Function>());
+    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = args[1].As<Array>();
+    Local<Array> t = info[1].As<Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!t->Get(i)->IsString()) {
             continue;
@@ -209,37 +216,41 @@ NAN_METHOD(setTags)
         [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
     }
 
-    NanAsyncQueueWorker(new SetTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new SetTagsWorker(callback, path, tags));
 
-    NanReturnUndefined();
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
 NAN_METHOD(addTags)
 {
-    NanScope();
+    Nan::HandleScope scope;
 
-    if (args.Length() < 2) {
-        NanThrowTypeError("Wrong number of arguments");
-        NanReturnUndefined();
+    if (info.Length() < 2) {
+        Nan::ThrowTypeError("Wrong number of arguments");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[0]->IsString()) {
-        NanThrowTypeError("Path must be a string");
-        NanReturnUndefined();
+    if (!info[0]->IsString()) {
+        Nan::ThrowTypeError("Path must be a string");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[1]->IsArray()) {
-        NanThrowTypeError("Tags must be an array");
-        NanReturnUndefined();
+    if (!info[1]->IsArray()) {
+        Nan::ThrowTypeError("Tags must be an array");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (args.Length() >= 3 && !args[2]->IsFunction()) {
-        NanThrowTypeError("Callback must be a function");
-        NanReturnUndefined();
+    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+        Nan::ThrowTypeError("Callback must be a function");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(args[0]).length()], *(String::Utf8Value(args[0])));
-    NanCallback *callback = new NanCallback(args[2].As<Function>());
+    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = args[1].As<Array>();
+    Local<Array> t = info[1].As<Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!t->Get(i)->IsString()) {
             continue;
@@ -248,37 +259,41 @@ NAN_METHOD(addTags)
         [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
     }
 
-    NanAsyncQueueWorker(new AddTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new AddTagsWorker(callback, path, tags));
 
-    NanReturnUndefined();
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
 NAN_METHOD(removeTags)
 {
-    NanScope();
+    Nan::HandleScope scope;
 
-    if (args.Length() < 2) {
-        NanThrowTypeError("Wrong number of arguments");
-        NanReturnUndefined();
+    if (info.Length() < 2) {
+        Nan::ThrowTypeError("Wrong number of arguments");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[0]->IsString()) {
-        NanThrowTypeError("Path must be a string");
-        NanReturnUndefined();
+    if (!info[0]->IsString()) {
+        Nan::ThrowTypeError("Path must be a string");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (!args[1]->IsArray()) {
-        NanThrowTypeError("Tags must be an array");
-        NanReturnUndefined();
+    if (!info[1]->IsArray()) {
+        Nan::ThrowTypeError("Tags must be an array");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
-    if (args.Length() >= 3 && !args[2]->IsFunction()) {
-        NanThrowTypeError("Callback must be a function");
-        NanReturnUndefined();
+    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+        Nan::ThrowTypeError("Callback must be a function");
+        info.GetReturnValue().Set(Nan::Undefined());
+        return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(args[0]).length()], *(String::Utf8Value(args[0])));
-    NanCallback *callback = new NanCallback(args[2].As<Function>());
+    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = args[1].As<Array>();
+    Local<Array> t = info[1].As<Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!t->Get(i)->IsString()) {
             continue;
@@ -287,21 +302,25 @@ NAN_METHOD(removeTags)
         [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
     }
 
-    NanAsyncQueueWorker(new RemoveTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new RemoveTagsWorker(callback, path, tags));
 
-    NanReturnUndefined();
+    info.GetReturnValue().Set(Nan::Undefined());
 }
 
-void init(Handle<Object> exports)
+NAN_MODULE_INIT(init)
 {
-    exports->Set(NanNew("getTags"),
-        NanNew<FunctionTemplate>(getTags)->GetFunction());
-    exports->Set(NanNew("setTags"),
-        NanNew<FunctionTemplate>(setTags)->GetFunction());
-    exports->Set(NanNew("addTags"),
-        NanNew<FunctionTemplate>(addTags)->GetFunction());
-    exports->Set(NanNew("removeTags"),
-        NanNew<FunctionTemplate>(removeTags)->GetFunction());
+    Nan::Set(target,
+        Nan::New<v8::String>("getTags").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(getTags)).ToLocalChecked());
+    Nan::Set(target,
+        Nan::New<v8::String>("setTags").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(setTags)).ToLocalChecked());
+    Nan::Set(target,
+        Nan::New<v8::String>("addTags").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(addTags)).ToLocalChecked());
+    Nan::Set(target,
+        Nan::New<v8::String>("removeTags").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(removeTags)).ToLocalChecked());
 }
 
 NODE_MODULE(osx_tag, init)
