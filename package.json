@@ -22,7 +22,7 @@
   "license": "MIT",
   "gypfile": true,
   "dependencies": {
-    "nan": "~1.8.4"
+    "nan": "~2.3.3"
   },
   "devDependencies": {
     "mocha": "~1.21.0"
