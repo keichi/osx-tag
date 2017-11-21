@@ -1,7 +1,7 @@
 {
   "name": "osx-tag",
-  "version": "0.2.0",
-  "description": "A module to operate tags on OSX Mavericks",
+  "version": "0.3.0",
+  "description": "A module to operate tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
     "test": "mocha --reporter spec",
@@ -17,8 +17,12 @@
   "author": {
     "name": "Keichi Takahashi",
     "email": "keichi.t@me.com",
-    "url": "http://blog.keichi.net/"
+    "url": "https://keichi.net/"
   },
+  "contributors": [
+    "Michaël Jacobs <michael.jacobs92@gmail.com>",
+    "Ilkka Myller <ilkka@myller.com>"
+  ],
   "license": "MIT",
   "gypfile": true,
   "dependencies": {
