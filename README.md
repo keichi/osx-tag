@@ -1,8 +1,8 @@
 # osx-tag
 
-This is a module to operate tags on OSX Mavericks.
+This is a module to operate tags on macOS.
 You can get/set/add/remove tags with simple API methods.
-Works only on Mac OSX 10.9.x.
+Works only on Mac OSX 10.9.x (Mavericks) or later.
 
 ## Quick Start
 Install `osx-tag` with npm:
@@ -22,7 +22,7 @@ tag.getTags(path, function(err, tags) {
     console.log(tags);
     tag.addTags(path, ['Important', 'Photo'], function(err) {
         if (err) throw err;
-    }); 
+    });
 });
 ```
 
