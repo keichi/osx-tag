@@ -18,13 +18,13 @@ public:
         NSURL *url = [NSURL fileURLWithPath:s];
         NSError *error = nil;
         NSArray *tags;
-        
+
         [url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error];
 
         if (error) {
             SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
-            this->tags = [NSMutableSet setWithArray:tags];    
+            this->tags = [NSMutableSet setWithArray:tags];
         }
     }
 
@@ -56,7 +56,7 @@ public:
         NSString *s = [NSString stringWithUTF8String:this->path];
         NSURL *url = [NSURL fileURLWithPath:s];
         NSError *error = nil;
-        
+
         [url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error];
 
         if (error) {
@@ -100,7 +100,7 @@ public:
         if (error) {
             return SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
-            oldTags = [NSMutableSet setWithArray:oldTagsArray];    
+            oldTags = [NSMutableSet setWithArray:oldTagsArray];
         }
 
         [tags unionSet:oldTags];
@@ -134,7 +134,7 @@ public:
         if (error) {
             return SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
-            oldTags = [NSMutableSet setWithArray:oldTagsArray];    
+            oldTags = [NSMutableSet setWithArray:oldTagsArray];
         }
 
         [oldTags minusSet:tags];
@@ -170,10 +170,10 @@ NAN_METHOD(getTags)
         return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Utf8String path(info[0]);
     Nan::Callback *callback = new Nan::Callback(info[1].As<Function>());
 
-    Nan::AsyncQueueWorker(new GetTagsWorker(callback, path));
+    Nan::AsyncQueueWorker(new GetTagsWorker(callback, *path));
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
@@ -203,7 +203,7 @@ NAN_METHOD(setTags)
         return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Utf8String path(info[0]);
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
@@ -213,10 +213,10 @@ NAN_METHOD(setTags)
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
     }
 
-    Nan::AsyncQueueWorker(new SetTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
@@ -246,7 +246,7 @@ NAN_METHOD(addTags)
         return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Utf8String path(info[0]);
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
@@ -256,10 +256,10 @@ NAN_METHOD(addTags)
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
     }
 
-    Nan::AsyncQueueWorker(new AddTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
@@ -289,7 +289,7 @@ NAN_METHOD(removeTags)
         return;
     }
 
-    const char *path = strcpy(new char[String::Utf8Value(info[0]).length()], *(String::Utf8Value(info[0])));
+    Nan::Utf8String path(info[0]);
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
@@ -299,10 +299,10 @@ NAN_METHOD(removeTags)
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(String::Utf8Value(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
     }
 
-    Nan::AsyncQueueWorker(new RemoveTagsWorker(callback, path, tags));
+    Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
