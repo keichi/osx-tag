@@ -9,7 +9,8 @@ using namespace v8;
 
 class GetTagsWorker : public Nan::AsyncWorker {
 public:
-    GetTagsWorker(Nan::Callback *callback, const char *path) : Nan::AsyncWorker(callback), path(path) {}
+    GetTagsWorker(Nan::Callback *callback, const char *path)
+        : Nan::AsyncWorker(callback), path(path) {}
     ~GetTagsWorker() {}
 
     void Execute()
@@ -32,14 +33,16 @@ public:
     {
         Nan::HandleScope scope;
 
-        v8::Local<v8::Value> info[2] = { Nan::Null(), Nan::New<v8::Array>([this->tags count]) };
+        v8::Local<v8::Primitive> err = Nan::Null();
+        v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
 
         int i = 0;
         for (NSString *item in this->tags) {
-            info[1].As<Array>()->Set(i++, Nan::New([item UTF8String]).ToLocalChecked());
+            Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
         }
 
-        callback->Call(2, info);
+        v8::Local<v8::Value> argv[] = {err, tags};
+        Nan::Call(*callback, 2, argv);
     }
 private:
     NSMutableSet *tags;
@@ -48,7 +51,8 @@ private:
 
 class SetTagsWorker : public Nan::AsyncWorker {
 public:
-    SetTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+    SetTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
+        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~SetTagsWorker() {}
 
     void Execute()
@@ -68,14 +72,16 @@ public:
     {
         Nan::HandleScope scope;
 
-        v8::Local<v8::Value> info[2] = { Nan::Null(), Nan::New<v8::Array>([this->tags count]) };
+        v8::Local<v8::Primitive> err = Nan::Null();
+        v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
 
         int i = 0;
         for (NSString *item in this->tags) {
-            info[1].As<Array>()->Set(i++, Nan::New([item UTF8String]).ToLocalChecked());
+            Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
         }
 
-        callback->Call(2, info);
+        v8::Local<v8::Value> argv[] = {err, tags};
+        Nan::Call(*callback, 2, argv);
     }
 private:
     const char *path;
@@ -84,7 +90,8 @@ private:
 
 class AddTagsWorker : public Nan::AsyncWorker {
 public:
-    AddTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+    AddTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
+        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~AddTagsWorker() {}
 
     void Execute()
@@ -118,7 +125,8 @@ private:
 
 class RemoveTagsWorker : public Nan::AsyncWorker {
 public:
-    RemoveTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags) : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+    RemoveTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
+        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
     ~RemoveTagsWorker() {}
 
     void Execute()
@@ -207,13 +215,14 @@ NAN_METHOD(setTags)
     Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = info[1].As<Array>();
+    v8::Local<v8::Array> t = info[1].As<Array>();
+
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!t->Get(i)->IsString()) {
+        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
     }
 
     Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
@@ -252,11 +261,11 @@ NAN_METHOD(addTags)
 
     Local<Array> t = info[1].As<Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!t->Get(i)->IsString()) {
+        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
     }
 
     Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
@@ -295,11 +304,11 @@ NAN_METHOD(removeTags)
 
     Local<Array> t = info[1].As<Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!t->Get(i)->IsString()) {
+        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(t->Get(i)))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
     }
 
     Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
