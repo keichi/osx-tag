@@ -1,11 +1,9 @@
 # osx-tag
 
-This is a module to operate tags on macOS.
-You can get/set/add/remove tags with simple API methods.
-Works only on Mac OSX 10.9.x (Mavericks) or later.
+This is a node.js package that allows you to operate tags associated with
+files on macOS. Works only on macOS 10.9 (Mavericks) or later.
 
 ## Quick Start
-Install `osx-tag` with npm:
 
 ```shell
 $ npm install osx-tag
@@ -28,26 +26,24 @@ tag.getTags(path, function(err, tags) {
 
 ## API
 
-- All methods works asynchronously.
-- All arguments are required and cannot be omitted.
+See `test/test.js` for usage.
 
 ### getTags(path, callback)
-- `path` - Path of the file/directory to retrieve tags.
-- `callback` - This callback function gets two arguments `(err, tags)`
-    where `tags` is an array of tag names.
+- `path` - Path of the file/directory to retrieve associated tags.
+- `callback` - This callback function is called with  two arguments
+    `(err, tags)` where `tags` is an array of tags.
 
 ### setTags(path, tags, callback)
 - `path` - Path of the file/directory to set tags.
-- `tags` - Array of tag names to set. File/directory's tags are overwritten
-    with these.
-- `callback` - This callback gets one argument `(err)`.
+- `tags` - Array of tags to assign.
+- `callback` - This callback is called with one argument `(err)`.
 
 ### addTags(path, tags, callback)
 - `path` - Path of the file/directory to add tags.
-- `tags` - Array of tag names to add.
-- `callback` - This callback gets one argument `(err)`.
+- `tags` - Array of tags to add.
+- `callback` - This callback is called with one argument `(err)`.
 
 ### removeTags(path, tags, callback)
 - `path` - Path of the file/directory to remove tags.
-- `tags` - Array of tag names to remove.
-- `callback` - This callback gets one argument `(err)`.
+- `tags` - Array of tags to remove.
+- `callback` - This callback is called with one argument `(err)`.
