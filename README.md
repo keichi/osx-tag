@@ -1,4 +1,4 @@
-# osx-tag
+# osx-tag [![Action Status](https://github.com/keichi/osx-tag/workflows/Node%20CI/badge.svg)](https://github.com/keichi/osx-tag/actions)
 
 This is a node.js package that allows you to operate tags associated with
 files on macOS. Works only on macOS 10.9 (Mavericks) or later.
