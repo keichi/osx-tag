@@ -1,6 +1,6 @@
 {
   "name": "osx-tag",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A module to operate tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
