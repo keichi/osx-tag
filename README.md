@@ -1,4 +1,4 @@
-# osx-tag [![Action Status](https://github.com/keichi/osx-tag/workflows/Node%20CI/badge.svg)](https://github.com/keichi/osx-tag/actions)
+# osx-tag [![Action Status](https://github.com/keichi/osx-tag/workflows/Node%20CI/badge.svg)](https://github.com/keichi/osx-tag/actions) [![npm](https://img.shields.io/npm/v/osx-tag)](https://www.npmjs.com/package/osx-tag)
 
 A node.js package to manipulate tags associated with files on macOS.
 
