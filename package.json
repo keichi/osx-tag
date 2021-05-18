@@ -1,6 +1,6 @@
 {
   "name": "osx-tag",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A module to operate tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
@@ -35,6 +35,10 @@
     "type": "git",
     "url": "http://github.com/keichi/osx-tag.git"
   },
+  "files": [
+    "binding.gyp",
+    "osx_tag.mm"
+  ],
   "bugs": "http://github.com/keichi/osx-tag/issues",
   "engines": {
     "node": ">=10"
