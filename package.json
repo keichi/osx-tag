@@ -35,5 +35,8 @@
     "type": "git",
     "url": "http://github.com/keichi/osx-tag.git"
   },
-  "bugs": "http://github.com/keichi/osx-tag/issues"
+  "bugs": "http://github.com/keichi/osx-tag/issues",
+  "engines": {
+    "node": ">=10"
+  }
 }
