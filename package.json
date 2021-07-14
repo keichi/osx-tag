@@ -1,6 +1,6 @@
 {
   "name": "osx-tag",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Manipulate tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
@@ -21,7 +21,8 @@
   },
   "contributors": [
     "Michaël Jacobs <michael.jacobs92@gmail.com>",
-    "Ilkka Myller <ilkka@myller.com>"
+    "Ilkka Myller <ilkka@myller.com>",
+    "ZoneMR <martin@zone-mr.net>"
   ],
   "license": "MIT",
   "gypfile": true,
