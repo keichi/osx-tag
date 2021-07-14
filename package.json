@@ -1,7 +1,7 @@
 {
   "name": "osx-tag",
   "version": "0.4.3",
-  "description": "A module to operate tags on macOS",
+  "description": "Manipulate tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
     "test": "mocha --reporter spec",
@@ -12,7 +12,7 @@
     "osx",
     "system",
     "fs",
-    "mac"
+    "macos"
   ],
   "author": {
     "name": "Keichi Takahashi",
