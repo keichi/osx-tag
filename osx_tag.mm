@@ -10,13 +10,12 @@ using namespace v8;
 class GetTagsWorker : public Nan::AsyncWorker {
 public:
     GetTagsWorker(Nan::Callback *callback, const char *path)
-        : Nan::AsyncWorker(callback), path(path) {}
+        : Nan::AsyncWorker(callback), path([NSString stringWithUTF8String:path]) {}
     ~GetTagsWorker() {}
 
     void Execute()
     {
-        NSString *s = [NSString stringWithUTF8String:this->path];
-        NSURL *url = [NSURL fileURLWithPath:s];
+        NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSArray *tags;
 
@@ -46,19 +45,18 @@ public:
     }
 private:
     NSMutableSet *tags;
-    const char *path;
+    NSString *path;
 };
 
 class SetTagsWorker : public Nan::AsyncWorker {
 public:
     SetTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
-        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+        : Nan::AsyncWorker(callback), path([NSString stringWithUTF8String:path]), tags(tags) {}
     ~SetTagsWorker() {}
 
     void Execute()
     {
-        NSString *s = [NSString stringWithUTF8String:this->path];
-        NSURL *url = [NSURL fileURLWithPath:s];
+        NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
 
         [url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error];
@@ -84,20 +82,19 @@ public:
         Nan::Call(*callback, 2, argv);
     }
 private:
-    const char *path;
+    NSString *path;
     NSMutableSet *tags;
 };
 
 class AddTagsWorker : public Nan::AsyncWorker {
 public:
     AddTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
-        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+        : Nan::AsyncWorker(callback), path([NSString stringWithUTF8String:path]), tags(tags) {}
     ~AddTagsWorker() {}
 
     void Execute()
     {
-        NSString *s = [NSString stringWithUTF8String:this->path];
-        NSURL *url = [NSURL fileURLWithPath:s];
+        NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
@@ -119,20 +116,19 @@ public:
         }
     }
 private:
-    const char *path;
+    NSString *path;
     NSMutableSet *tags;
 };
 
 class RemoveTagsWorker : public Nan::AsyncWorker {
 public:
     RemoveTagsWorker(Nan::Callback *callback, const char *path, NSMutableSet *tags)
-        : Nan::AsyncWorker(callback), path(path), tags(tags) {}
+        : Nan::AsyncWorker(callback), path([NSString stringWithUTF8String:path]), tags(tags) {}
     ~RemoveTagsWorker() {}
 
     void Execute()
     {
-        NSString *s = [NSString stringWithUTF8String:this->path];
-        NSURL *url = [NSURL fileURLWithPath:s];
+        NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
@@ -154,7 +150,7 @@ public:
         }
     }
 private:
-    const char *path;
+    NSString *path;
     NSMutableSet *tags;
 };
 
