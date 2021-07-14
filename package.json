@@ -29,7 +29,7 @@
     "nan": "~2.14.2"
   },
   "devDependencies": {
-    "mocha": "~8.4.0"
+    "mocha": "~9.0.2"
   },
   "repository": {
     "type": "git",
