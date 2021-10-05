@@ -1,11 +1,8 @@
 #import <Foundation/Foundation.h>
 
-#include <node.h>
 #include <nan.h>
 #include <iostream>
 #include <cstring>
-
-using namespace v8;
 
 class GetTagsWorker : public Nan::AsyncWorker {
 public:
@@ -175,7 +172,7 @@ NAN_METHOD(getTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[1].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
 
     Nan::AsyncQueueWorker(new GetTagsWorker(callback, *path));
 
@@ -208,10 +205,10 @@ NAN_METHOD(setTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    v8::Local<v8::Array> t = info[1].As<Array>();
+    v8::Local<v8::Array> t = info[1].As<v8::Array>();
 
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
@@ -252,10 +249,10 @@ NAN_METHOD(addTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = info[1].As<Array>();
+    v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
             continue;
@@ -295,10 +292,10 @@ NAN_METHOD(removeTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<Function>());
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
-    Local<Array> t = info[1].As<Array>();
+    v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
             continue;
