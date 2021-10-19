@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 
 #include <nan.h>
-#include <iostream>
-#include <cstring>
 
 class GetTagsWorker : public Nan::AsyncWorker {
 public:
