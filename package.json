@@ -1,7 +1,7 @@
 {
   "name": "osx-tag",
-  "version": "0.4.5",
-  "description": "Manipulate tags on macOS",
+  "version": "0.4.6",
+  "description": "Manipulate file tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
     "test": "mocha --reporter spec",
