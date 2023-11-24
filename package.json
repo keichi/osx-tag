@@ -1,6 +1,6 @@
 {
   "name": "osx-tag",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Manipulate file tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
@@ -22,7 +22,8 @@
   "contributors": [
     "Michaël Jacobs <michael.jacobs92@gmail.com>",
     "Ilkka Myller <ilkka@myller.com>",
-    "ZoneMR <martin@zone-mr.net>"
+    "ZoneMR <martin@zone-mr.net>",
+    "Nathan Manceaux-Panot <nathan@lemon.garden>"
   ],
   "license": "MIT",
   "gypfile": true,
@@ -43,6 +44,6 @@
   ],
   "bugs": "http://github.com/keichi/osx-tag/issues",
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   }
 }
