@@ -23,12 +23,12 @@
     "Michaël Jacobs <michael.jacobs92@gmail.com>",
     "Ilkka Myller <ilkka@myller.com>",
     "ZoneMR <martin@zone-mr.net>",
-    "Nathan Manceaux-Panot <nathan@lemon.garden>"
+    "Nathan Manceaux-Panot (https://cykele.ro)"
   ],
   "license": "MIT",
   "gypfile": true,
   "dependencies": {
-    "nan": "~2.18.0"
+    "nan": "~2.20.0"
   },
   "devDependencies": {
     "mocha": "~10.2.0",
