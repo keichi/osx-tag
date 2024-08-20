@@ -1,6 +1,6 @@
 {
   "name": "osx-tag",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "Manipulate file tags on macOS",
   "main": "build/Release/osx_tag",
   "scripts": {
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/keichi/osx-tag.git"
+    "url": "git+ssh://git@github.com/keichi/osx-tag.git"
   },
   "files": [
     "binding.gyp",
