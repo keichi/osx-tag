@@ -28,11 +28,11 @@
   "license": "MIT",
   "gypfile": true,
   "dependencies": {
-    "nan": "~2.22.0"
+    "nan": "~2.28.0"
   },
   "devDependencies": {
-    "mocha": "~10.2.0",
-    "node-gyp": "^10.0.1"
+    "mocha": "~11.7.6",
+    "node-gyp": "^13.0.1"
   },
   "repository": {
     "type": "git",
@@ -44,6 +44,6 @@
   ],
   "bugs": "http://github.com/keichi/osx-tag/issues",
   "engines": {
-    "node": ">=16"
+    "node": ">=22"
   }
 }
