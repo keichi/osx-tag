@@ -220,11 +220,16 @@ NAN_METHOD(setTags)
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
 
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
+        v8::Local<v8::Value> v;
+        if (!Nan::Get(t, i).ToLocal(&v)) {
+            delete callback;
+            return;
+        }
+        if (!v->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
     Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
@@ -265,11 +270,16 @@ NAN_METHOD(addTags)
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
+        v8::Local<v8::Value> v;
+        if (!Nan::Get(t, i).ToLocal(&v)) {
+            delete callback;
+            return;
+        }
+        if (!v->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
     Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
@@ -310,11 +320,16 @@ NAN_METHOD(removeTags)
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
-        if (!Nan::Get(t, i).ToLocalChecked()->IsString()) {
+        v8::Local<v8::Value> v;
+        if (!Nan::Get(t, i).ToLocal(&v)) {
+            delete callback;
+            return;
+        }
+        if (!v->IsString()) {
             continue;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(Nan::Get(t, i).ToLocalChecked()))]];
+        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
     Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
