@@ -15,35 +15,35 @@ public:
 
     void Execute()
     {
-    @autoreleasepool {
-        NSURL *url = [NSURL fileURLWithPath:path];
-        NSError *error = nil;
-        NSArray *tags;
+        @autoreleasepool {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            NSError *error = nil;
+            NSArray *tags;
 
-        if (![url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error]) {
-            SetErrorMessage([[error localizedDescription] UTF8String]);
-        } else {
-            this->tags = [NSMutableSet setWithArray:tags];
+            if (![url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error]) {
+                SetErrorMessage([[error localizedDescription] UTF8String]);
+            } else {
+                this->tags = [NSMutableSet setWithArray:tags];
+            }
         }
-    }
     }
 
     void HandleOKCallback()
     {
-    @autoreleasepool {
-        Nan::HandleScope scope;
+        @autoreleasepool {
+            Nan::HandleScope scope;
 
-        v8::Local<v8::Primitive> err = Nan::Null();
-        v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
+            v8::Local<v8::Primitive> err = Nan::Null();
+            v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
 
-        int i = 0;
-        for (NSString *item in this->tags) {
-            Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
+            int i = 0;
+            for (NSString *item in this->tags) {
+                Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
+            }
+
+            v8::Local<v8::Value> argv[] = {err, tags};
+            Nan::Call(*callback, 2, argv);
         }
-
-        v8::Local<v8::Value> argv[] = {err, tags};
-        Nan::Call(*callback, 2, argv);
-    }
     }
 private:
     NSMutableSet *tags;
@@ -58,33 +58,33 @@ public:
 
     void Execute()
     {
-    @autoreleasepool {
-        NSURL *url = [NSURL fileURLWithPath:path];
-        NSError *error = nil;
-        std::lock_guard<std::mutex> lock(tagsMutex);
+        @autoreleasepool {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            NSError *error = nil;
+            std::lock_guard<std::mutex> lock(tagsMutex);
 
-        if (![url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
-            SetErrorMessage([[error localizedDescription] UTF8String]);
+            if (![url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
+                SetErrorMessage([[error localizedDescription] UTF8String]);
+            }
         }
-    }
     }
 
     void HandleOKCallback()
     {
-    @autoreleasepool {
-        Nan::HandleScope scope;
+        @autoreleasepool {
+            Nan::HandleScope scope;
 
-        v8::Local<v8::Primitive> err = Nan::Null();
-        v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
+            v8::Local<v8::Primitive> err = Nan::Null();
+            v8::Local<v8::Object> tags = Nan::New<v8::Array>([this->tags count]);
 
-        int i = 0;
-        for (NSString *item in this->tags) {
-            Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
+            int i = 0;
+            for (NSString *item in this->tags) {
+                Nan::Set(tags, i++, Nan::New([item UTF8String]).ToLocalChecked());
+            }
+
+            v8::Local<v8::Value> argv[] = {err, tags};
+            Nan::Call(*callback, 2, argv);
         }
-
-        v8::Local<v8::Value> argv[] = {err, tags};
-        Nan::Call(*callback, 2, argv);
-    }
     }
 private:
     NSString *path;
@@ -99,25 +99,25 @@ public:
 
     void Execute()
     {
-    @autoreleasepool {
-        NSURL *url = [NSURL fileURLWithPath:path];
-        NSError *error = nil;
-        NSMutableSet *oldTags = nil;
-        NSArray *oldTagsArray;
-        std::lock_guard<std::mutex> lock(tagsMutex);
+        @autoreleasepool {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            NSError *error = nil;
+            NSMutableSet *oldTags = nil;
+            NSArray *oldTagsArray;
+            std::lock_guard<std::mutex> lock(tagsMutex);
 
-        if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
-            return SetErrorMessage([[error localizedDescription] UTF8String]);
-        } else {
-            oldTags = [NSMutableSet setWithArray:oldTagsArray];
+            if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
+                return SetErrorMessage([[error localizedDescription] UTF8String]);
+            } else {
+                oldTags = [NSMutableSet setWithArray:oldTagsArray];
+            }
+
+            [tags unionSet:oldTags];
+
+            if (![url setResourceValue:[tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
+                SetErrorMessage([[error localizedDescription] UTF8String]);
+            }
         }
-
-        [tags unionSet:oldTags];
-
-        if (![url setResourceValue:[tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
-            SetErrorMessage([[error localizedDescription] UTF8String]);
-        }
-    }
     }
 private:
     NSString *path;
@@ -132,25 +132,25 @@ public:
 
     void Execute()
     {
-    @autoreleasepool {
-        NSURL *url = [NSURL fileURLWithPath:path];
-        NSError *error = nil;
-        NSMutableSet *oldTags = nil;
-        NSArray *oldTagsArray;
-        std::lock_guard<std::mutex> lock(tagsMutex);
+        @autoreleasepool {
+            NSURL *url = [NSURL fileURLWithPath:path];
+            NSError *error = nil;
+            NSMutableSet *oldTags = nil;
+            NSArray *oldTagsArray;
+            std::lock_guard<std::mutex> lock(tagsMutex);
 
-        if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
-            return SetErrorMessage([[error localizedDescription] UTF8String]);
-        } else {
-            oldTags = [NSMutableSet setWithArray:oldTagsArray];
+            if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
+                return SetErrorMessage([[error localizedDescription] UTF8String]);
+            } else {
+                oldTags = [NSMutableSet setWithArray:oldTagsArray];
+            }
+
+            [oldTags minusSet:tags];
+
+            if (![url setResourceValue:[oldTags allObjects] forKey:NSURLTagNamesKey error:&error]) {
+                SetErrorMessage([[error localizedDescription] UTF8String]);
+            }
         }
-
-        [oldTags minusSet:tags];
-
-        if (![url setResourceValue:[oldTags allObjects] forKey:NSURLTagNamesKey error:&error]) {
-            SetErrorMessage([[error localizedDescription] UTF8String]);
-        }
-    }
     }
 private:
     NSString *path;
@@ -164,217 +164,217 @@ static bool hasNul(const Nan::Utf8String &s)
 
 NAN_METHOD(getTags)
 {
-@autoreleasepool {
-    Nan::HandleScope scope;
+    @autoreleasepool {
+        Nan::HandleScope scope;
 
-    if (info.Length() < 2) {
-        Nan::ThrowTypeError("Wrong number of arguments");
+        if (info.Length() < 2) {
+            Nan::ThrowTypeError("Wrong number of arguments");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+            Nan::ThrowTypeError("Path must be a non-empty string");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (!info[1]->IsFunction()) {
+            Nan::ThrowTypeError("Callback must be a function");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+
+        Nan::Utf8String path(info[0]);
+        if (hasNul(path)) {
+            Nan::ThrowTypeError("Path must not contain null bytes");
+            return;
+        }
+        Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
+
+        Nan::AsyncQueueWorker(new GetTagsWorker(callback, *path));
+
         info.GetReturnValue().Set(Nan::Undefined());
-        return;
     }
-    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
-        Nan::ThrowTypeError("Path must be a non-empty string");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[1]->IsFunction()) {
-        Nan::ThrowTypeError("Callback must be a function");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-
-    Nan::Utf8String path(info[0]);
-    if (hasNul(path)) {
-        Nan::ThrowTypeError("Path must not contain null bytes");
-        return;
-    }
-    Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
-
-    Nan::AsyncQueueWorker(new GetTagsWorker(callback, *path));
-
-    info.GetReturnValue().Set(Nan::Undefined());
-}
 }
 
 NAN_METHOD(setTags)
 {
-@autoreleasepool {
-    Nan::HandleScope scope;
+    @autoreleasepool {
+        Nan::HandleScope scope;
 
-    if (info.Length() < 2) {
-        Nan::ThrowTypeError("Wrong number of arguments");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
-        Nan::ThrowTypeError("Path must be a non-empty string");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[1]->IsArray()) {
-        Nan::ThrowTypeError("Tags must be an array");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (info.Length() < 3 || !info[2]->IsFunction()) {
-        Nan::ThrowTypeError("Callback must be a function");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-
-    Nan::Utf8String path(info[0]);
-    if (hasNul(path)) {
-        Nan::ThrowTypeError("Path must not contain null bytes");
-        return;
-    }
-    NSMutableSet *tags = [NSMutableSet new];
-
-    v8::Local<v8::Array> t = info[1].As<v8::Array>();
-
-    for (uint32_t i = 0; i < t->Length(); i++) {
-        v8::Local<v8::Value> v;
-        if (!Nan::Get(t, i).ToLocal(&v)) {
+        if (info.Length() < 2) {
+            Nan::ThrowTypeError("Wrong number of arguments");
+            info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
-        if (!v->IsString()) {
-            Nan::ThrowTypeError("Tags must be an array of strings");
+        if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+            Nan::ThrowTypeError("Path must be a non-empty string");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (!info[1]->IsArray()) {
+            Nan::ThrowTypeError("Tags must be an array");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (info.Length() < 3 || !info[2]->IsFunction()) {
+            Nan::ThrowTypeError("Callback must be a function");
             info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
 
-        Nan::Utf8String tag(v);
-        if (hasNul(tag)) {
-            Nan::ThrowTypeError("Tag must not contain null bytes");
+        Nan::Utf8String path(info[0]);
+        if (hasNul(path)) {
+            Nan::ThrowTypeError("Path must not contain null bytes");
             return;
         }
-        [tags addObject:[NSString stringWithUTF8String:*tag]];
+        NSMutableSet *tags = [NSMutableSet new];
+
+        v8::Local<v8::Array> t = info[1].As<v8::Array>();
+
+        for (uint32_t i = 0; i < t->Length(); i++) {
+            v8::Local<v8::Value> v;
+            if (!Nan::Get(t, i).ToLocal(&v)) {
+                return;
+            }
+            if (!v->IsString()) {
+                Nan::ThrowTypeError("Tags must be an array of strings");
+                info.GetReturnValue().Set(Nan::Undefined());
+                return;
+            }
+
+            Nan::Utf8String tag(v);
+            if (hasNul(tag)) {
+                Nan::ThrowTypeError("Tag must not contain null bytes");
+                return;
+            }
+            [tags addObject:[NSString stringWithUTF8String:*tag]];
+        }
+
+        Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
+        Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
+
+        info.GetReturnValue().Set(Nan::Undefined());
     }
-
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
-    Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
-
-    info.GetReturnValue().Set(Nan::Undefined());
-}
 }
 
 NAN_METHOD(addTags)
 {
-@autoreleasepool {
-    Nan::HandleScope scope;
+    @autoreleasepool {
+        Nan::HandleScope scope;
 
-    if (info.Length() < 2) {
-        Nan::ThrowTypeError("Wrong number of arguments");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
-        Nan::ThrowTypeError("Path must be a non-empty string");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[1]->IsArray()) {
-        Nan::ThrowTypeError("Tags must be an array");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (info.Length() < 3 || !info[2]->IsFunction()) {
-        Nan::ThrowTypeError("Callback must be a function");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-
-    Nan::Utf8String path(info[0]);
-    if (hasNul(path)) {
-        Nan::ThrowTypeError("Path must not contain null bytes");
-        return;
-    }
-    NSMutableSet *tags = [NSMutableSet new];
-
-    v8::Local<v8::Array> t = info[1].As<v8::Array>();
-    for (uint32_t i = 0; i < t->Length(); i++) {
-        v8::Local<v8::Value> v;
-        if (!Nan::Get(t, i).ToLocal(&v)) {
+        if (info.Length() < 2) {
+            Nan::ThrowTypeError("Wrong number of arguments");
+            info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
-        if (!v->IsString()) {
-            Nan::ThrowTypeError("Tags must be an array of strings");
+        if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+            Nan::ThrowTypeError("Path must be a non-empty string");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (!info[1]->IsArray()) {
+            Nan::ThrowTypeError("Tags must be an array");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (info.Length() < 3 || !info[2]->IsFunction()) {
+            Nan::ThrowTypeError("Callback must be a function");
             info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
 
-        Nan::Utf8String tag(v);
-        if (hasNul(tag)) {
-            Nan::ThrowTypeError("Tag must not contain null bytes");
+        Nan::Utf8String path(info[0]);
+        if (hasNul(path)) {
+            Nan::ThrowTypeError("Path must not contain null bytes");
             return;
         }
-        [tags addObject:[NSString stringWithUTF8String:*tag]];
+        NSMutableSet *tags = [NSMutableSet new];
+
+        v8::Local<v8::Array> t = info[1].As<v8::Array>();
+        for (uint32_t i = 0; i < t->Length(); i++) {
+            v8::Local<v8::Value> v;
+            if (!Nan::Get(t, i).ToLocal(&v)) {
+                return;
+            }
+            if (!v->IsString()) {
+                Nan::ThrowTypeError("Tags must be an array of strings");
+                info.GetReturnValue().Set(Nan::Undefined());
+                return;
+            }
+
+            Nan::Utf8String tag(v);
+            if (hasNul(tag)) {
+                Nan::ThrowTypeError("Tag must not contain null bytes");
+                return;
+            }
+            [tags addObject:[NSString stringWithUTF8String:*tag]];
+        }
+
+        Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
+        Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
+
+        info.GetReturnValue().Set(Nan::Undefined());
     }
-
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
-    Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
-
-    info.GetReturnValue().Set(Nan::Undefined());
-}
 }
 
 NAN_METHOD(removeTags)
 {
-@autoreleasepool {
-    Nan::HandleScope scope;
+    @autoreleasepool {
+        Nan::HandleScope scope;
 
-    if (info.Length() < 2) {
-        Nan::ThrowTypeError("Wrong number of arguments");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
-        Nan::ThrowTypeError("Path must be a non-empty string");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (!info[1]->IsArray()) {
-        Nan::ThrowTypeError("Tags must be an array");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-    if (info.Length() < 3 || !info[2]->IsFunction()) {
-        Nan::ThrowTypeError("Callback must be a function");
-        info.GetReturnValue().Set(Nan::Undefined());
-        return;
-    }
-
-    Nan::Utf8String path(info[0]);
-    if (hasNul(path)) {
-        Nan::ThrowTypeError("Path must not contain null bytes");
-        return;
-    }
-    NSMutableSet *tags = [NSMutableSet new];
-
-    v8::Local<v8::Array> t = info[1].As<v8::Array>();
-    for (uint32_t i = 0; i < t->Length(); i++) {
-        v8::Local<v8::Value> v;
-        if (!Nan::Get(t, i).ToLocal(&v)) {
+        if (info.Length() < 2) {
+            Nan::ThrowTypeError("Wrong number of arguments");
+            info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
-        if (!v->IsString()) {
-            Nan::ThrowTypeError("Tags must be an array of strings");
+        if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+            Nan::ThrowTypeError("Path must be a non-empty string");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (!info[1]->IsArray()) {
+            Nan::ThrowTypeError("Tags must be an array");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
+        }
+        if (info.Length() < 3 || !info[2]->IsFunction()) {
+            Nan::ThrowTypeError("Callback must be a function");
             info.GetReturnValue().Set(Nan::Undefined());
             return;
         }
 
-        Nan::Utf8String tag(v);
-        if (hasNul(tag)) {
-            Nan::ThrowTypeError("Tag must not contain null bytes");
+        Nan::Utf8String path(info[0]);
+        if (hasNul(path)) {
+            Nan::ThrowTypeError("Path must not contain null bytes");
             return;
         }
-        [tags addObject:[NSString stringWithUTF8String:*tag]];
+        NSMutableSet *tags = [NSMutableSet new];
+
+        v8::Local<v8::Array> t = info[1].As<v8::Array>();
+        for (uint32_t i = 0; i < t->Length(); i++) {
+            v8::Local<v8::Value> v;
+            if (!Nan::Get(t, i).ToLocal(&v)) {
+                return;
+            }
+            if (!v->IsString()) {
+                Nan::ThrowTypeError("Tags must be an array of strings");
+                info.GetReturnValue().Set(Nan::Undefined());
+                return;
+            }
+
+            Nan::Utf8String tag(v);
+            if (hasNul(tag)) {
+                Nan::ThrowTypeError("Tag must not contain null bytes");
+                return;
+            }
+            [tags addObject:[NSString stringWithUTF8String:*tag]];
+        }
+
+        Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
+        Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
+
+        info.GetReturnValue().Set(Nan::Undefined());
     }
-
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
-    Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
-
-    info.GetReturnValue().Set(Nan::Undefined());
-}
 }
 
 NAN_MODULE_INIT(init)
