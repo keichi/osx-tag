@@ -166,8 +166,8 @@ NAN_METHOD(getTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (!info[0]->IsString()) {
-        Nan::ThrowTypeError("Path must be a string");
+    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+        Nan::ThrowTypeError("Path must be a non-empty string");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
@@ -194,8 +194,8 @@ NAN_METHOD(setTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (!info[0]->IsString()) {
-        Nan::ThrowTypeError("Path must be a string");
+    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+        Nan::ThrowTypeError("Path must be a non-empty string");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
@@ -238,8 +238,8 @@ NAN_METHOD(addTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (!info[0]->IsString()) {
-        Nan::ThrowTypeError("Path must be a string");
+    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+        Nan::ThrowTypeError("Path must be a non-empty string");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
@@ -281,8 +281,8 @@ NAN_METHOD(removeTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (!info[0]->IsString()) {
-        Nan::ThrowTypeError("Path must be a string");
+    if (!info[0]->IsString() || info[0].As<v8::String>()->Length() == 0) {
+        Nan::ThrowTypeError("Path must be a non-empty string");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
