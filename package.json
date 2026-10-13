@@ -45,5 +45,8 @@
   "bugs": "http://github.com/keichi/osx-tag/issues",
   "engines": {
     "node": ">=22"
-  }
+  },
+  "os": [
+    "darwin"
+  ]
 }
