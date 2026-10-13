@@ -196,7 +196,7 @@ NAN_METHOD(setTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+    if (info.Length() < 3 || !info[2]->IsFunction()) {
         Nan::ThrowTypeError("Callback must be a function");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -240,7 +240,7 @@ NAN_METHOD(addTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+    if (info.Length() < 3 || !info[2]->IsFunction()) {
         Nan::ThrowTypeError("Callback must be a function");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
@@ -283,7 +283,7 @@ NAN_METHOD(removeTags)
         info.GetReturnValue().Set(Nan::Undefined());
         return;
     }
-    if (info.Length() >= 3 && !info[2]->IsFunction()) {
+    if (info.Length() < 3 || !info[2]->IsFunction()) {
         Nan::ThrowTypeError("Callback must be a function");
         info.GetReturnValue().Set(Nan::Undefined());
         return;
