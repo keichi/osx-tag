@@ -1,6 +1,11 @@
 #import <Foundation/Foundation.h>
 
 #include <nan.h>
+#include <mutex>
+
+// Serializes tag read-modify-write so concurrent add/remove/set don't lose updates.
+// ponytail: global lock, per-path locks if throughput matters
+static std::mutex tagsMutex;
 
 class GetTagsWorker : public Nan::AsyncWorker {
 public:
@@ -53,6 +58,7 @@ public:
     {
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
+        std::lock_guard<std::mutex> lock(tagsMutex);
 
         [url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error];
 
@@ -93,6 +99,7 @@ public:
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
+        std::lock_guard<std::mutex> lock(tagsMutex);
 
         [url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error];
 
@@ -127,6 +134,7 @@ public:
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
+        std::lock_guard<std::mutex> lock(tagsMutex);
 
         [url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error];
 
