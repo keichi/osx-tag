@@ -214,7 +214,6 @@ NAN_METHOD(setTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
@@ -222,16 +221,18 @@ NAN_METHOD(setTags)
     for (uint32_t i = 0; i < t->Length(); i++) {
         v8::Local<v8::Value> v;
         if (!Nan::Get(t, i).ToLocal(&v)) {
-            delete callback;
             return;
         }
         if (!v->IsString()) {
-            continue;
+            Nan::ThrowTypeError("Tags must be an array of strings");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
 
         [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     Nan::AsyncQueueWorker(new SetTagsWorker(callback, *path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
@@ -265,23 +266,24 @@ NAN_METHOD(addTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         v8::Local<v8::Value> v;
         if (!Nan::Get(t, i).ToLocal(&v)) {
-            delete callback;
             return;
         }
         if (!v->IsString()) {
-            continue;
+            Nan::ThrowTypeError("Tags must be an array of strings");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
 
         [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     Nan::AsyncQueueWorker(new AddTagsWorker(callback, *path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
@@ -315,23 +317,24 @@ NAN_METHOD(removeTags)
     }
 
     Nan::Utf8String path(info[0]);
-    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
     for (uint32_t i = 0; i < t->Length(); i++) {
         v8::Local<v8::Value> v;
         if (!Nan::Get(t, i).ToLocal(&v)) {
-            delete callback;
             return;
         }
         if (!v->IsString()) {
-            continue;
+            Nan::ThrowTypeError("Tags must be an array of strings");
+            info.GetReturnValue().Set(Nan::Undefined());
+            return;
         }
 
         [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
     }
 
+    Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
     Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
