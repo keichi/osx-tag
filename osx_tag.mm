@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
-#include <nan.h>
 #include <mutex>
+#include <nan.h>
 
 // Serializes tag read-modify-write so concurrent add/remove/set don't lose updates.
 // ponytail: global lock, per-path locks if throughput matters
@@ -371,7 +371,7 @@ NAN_METHOD(removeTags)
         }
 
         Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
-        Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
+        Nan::AsyncQueueWorker(new RemoveTagsWorker(callback, *path, tags));
 
         info.GetReturnValue().Set(Nan::Undefined());
     }
