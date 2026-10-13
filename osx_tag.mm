@@ -15,6 +15,7 @@ public:
 
     void Execute()
     {
+    @autoreleasepool {
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSArray *tags;
@@ -25,9 +26,11 @@ public:
             this->tags = [NSMutableSet setWithArray:tags];
         }
     }
+    }
 
     void HandleOKCallback()
     {
+    @autoreleasepool {
         Nan::HandleScope scope;
 
         v8::Local<v8::Primitive> err = Nan::Null();
@@ -40,6 +43,7 @@ public:
 
         v8::Local<v8::Value> argv[] = {err, tags};
         Nan::Call(*callback, 2, argv);
+    }
     }
 private:
     NSMutableSet *tags;
@@ -54,6 +58,7 @@ public:
 
     void Execute()
     {
+    @autoreleasepool {
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         std::lock_guard<std::mutex> lock(tagsMutex);
@@ -62,9 +67,11 @@ public:
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
+    }
 
     void HandleOKCallback()
     {
+    @autoreleasepool {
         Nan::HandleScope scope;
 
         v8::Local<v8::Primitive> err = Nan::Null();
@@ -77,6 +84,7 @@ public:
 
         v8::Local<v8::Value> argv[] = {err, tags};
         Nan::Call(*callback, 2, argv);
+    }
     }
 private:
     NSString *path;
@@ -91,6 +99,7 @@ public:
 
     void Execute()
     {
+    @autoreleasepool {
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
@@ -109,6 +118,7 @@ public:
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
+    }
 private:
     NSString *path;
     NSMutableSet *tags;
@@ -122,6 +132,7 @@ public:
 
     void Execute()
     {
+    @autoreleasepool {
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
         NSMutableSet *oldTags = nil;
@@ -140,6 +151,7 @@ public:
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
+    }
 private:
     NSString *path;
     NSMutableSet *tags;
@@ -147,6 +159,7 @@ private:
 
 NAN_METHOD(getTags)
 {
+@autoreleasepool {
     Nan::HandleScope scope;
 
     if (info.Length() < 2) {
@@ -172,9 +185,11 @@ NAN_METHOD(getTags)
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
+}
 
 NAN_METHOD(setTags)
 {
+@autoreleasepool {
     Nan::HandleScope scope;
 
     if (info.Length() < 2) {
@@ -216,9 +231,11 @@ NAN_METHOD(setTags)
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
+}
 
 NAN_METHOD(addTags)
 {
+@autoreleasepool {
     Nan::HandleScope scope;
 
     if (info.Length() < 2) {
@@ -259,9 +276,11 @@ NAN_METHOD(addTags)
 
     info.GetReturnValue().Set(Nan::Undefined());
 }
+}
 
 NAN_METHOD(removeTags)
 {
+@autoreleasepool {
     Nan::HandleScope scope;
 
     if (info.Length() < 2) {
@@ -301,6 +320,7 @@ NAN_METHOD(removeTags)
     Nan::AsyncQueueWorker(new RemoveTagsWorker(callback,*path, tags));
 
     info.GetReturnValue().Set(Nan::Undefined());
+}
 }
 
 NAN_MODULE_INIT(init)
