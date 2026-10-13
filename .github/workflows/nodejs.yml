@@ -7,6 +7,15 @@ on:
     branches: [ master ]
 
 jobs:
+  format:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Check formatting
+      run: pipx run clang-format==23.1.1 --dry-run --Werror osx_tag.mm
+
   build:
 
     runs-on: macOS-latest
