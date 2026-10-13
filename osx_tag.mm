@@ -14,9 +14,7 @@ public:
         NSError *error = nil;
         NSArray *tags;
 
-        [url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url getResourceValue:&tags forKey:NSURLTagNamesKey error:&error]) {
             SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
             this->tags = [NSMutableSet setWithArray:tags];
@@ -54,9 +52,7 @@ public:
         NSURL *url = [NSURL fileURLWithPath:path];
         NSError *error = nil;
 
-        [url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url setResourceValue:[this->tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
@@ -94,9 +90,7 @@ public:
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
 
-        [url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
             return SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
             oldTags = [NSMutableSet setWithArray:oldTagsArray];
@@ -104,9 +98,7 @@ public:
 
         [tags unionSet:oldTags];
 
-        [url setResourceValue:[tags allObjects] forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url setResourceValue:[tags allObjects] forKey:NSURLTagNamesKey error:&error]) {
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
@@ -128,9 +120,7 @@ public:
         NSMutableSet *oldTags = nil;
         NSArray *oldTagsArray;
 
-        [url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url getResourceValue:&oldTagsArray forKey:NSURLTagNamesKey error:&error]) {
             return SetErrorMessage([[error localizedDescription] UTF8String]);
         } else {
             oldTags = [NSMutableSet setWithArray:oldTagsArray];
@@ -138,9 +128,7 @@ public:
 
         [oldTags minusSet:tags];
 
-        [url setResourceValue:[oldTags allObjects] forKey:NSURLTagNamesKey error:&error];
-
-        if (error) {
+        if (![url setResourceValue:[oldTags allObjects] forKey:NSURLTagNamesKey error:&error]) {
             SetErrorMessage([[error localizedDescription] UTF8String]);
         }
     }
