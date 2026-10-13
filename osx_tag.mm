@@ -157,6 +157,11 @@ private:
     NSMutableSet *tags;
 };
 
+static bool hasNul(const Nan::Utf8String &s)
+{
+    return strlen(*s) != (size_t)s.length();
+}
+
 NAN_METHOD(getTags)
 {
 @autoreleasepool {
@@ -179,6 +184,10 @@ NAN_METHOD(getTags)
     }
 
     Nan::Utf8String path(info[0]);
+    if (hasNul(path)) {
+        Nan::ThrowTypeError("Path must not contain null bytes");
+        return;
+    }
     Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
 
     Nan::AsyncQueueWorker(new GetTagsWorker(callback, *path));
@@ -214,6 +223,10 @@ NAN_METHOD(setTags)
     }
 
     Nan::Utf8String path(info[0]);
+    if (hasNul(path)) {
+        Nan::ThrowTypeError("Path must not contain null bytes");
+        return;
+    }
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
@@ -229,7 +242,12 @@ NAN_METHOD(setTags)
             return;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
+        Nan::Utf8String tag(v);
+        if (hasNul(tag)) {
+            Nan::ThrowTypeError("Tag must not contain null bytes");
+            return;
+        }
+        [tags addObject:[NSString stringWithUTF8String:*tag]];
     }
 
     Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
@@ -266,6 +284,10 @@ NAN_METHOD(addTags)
     }
 
     Nan::Utf8String path(info[0]);
+    if (hasNul(path)) {
+        Nan::ThrowTypeError("Path must not contain null bytes");
+        return;
+    }
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
@@ -280,7 +302,12 @@ NAN_METHOD(addTags)
             return;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
+        Nan::Utf8String tag(v);
+        if (hasNul(tag)) {
+            Nan::ThrowTypeError("Tag must not contain null bytes");
+            return;
+        }
+        [tags addObject:[NSString stringWithUTF8String:*tag]];
     }
 
     Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
@@ -317,6 +344,10 @@ NAN_METHOD(removeTags)
     }
 
     Nan::Utf8String path(info[0]);
+    if (hasNul(path)) {
+        Nan::ThrowTypeError("Path must not contain null bytes");
+        return;
+    }
     NSMutableSet *tags = [NSMutableSet new];
 
     v8::Local<v8::Array> t = info[1].As<v8::Array>();
@@ -331,7 +362,12 @@ NAN_METHOD(removeTags)
             return;
         }
 
-        [tags addObject:[NSString stringWithUTF8String:*(Nan::Utf8String(v))]];
+        Nan::Utf8String tag(v);
+        if (hasNul(tag)) {
+            Nan::ThrowTypeError("Tag must not contain null bytes");
+            return;
+        }
+        [tags addObject:[NSString stringWithUTF8String:*tag]];
     }
 
     Nan::Callback *callback = new Nan::Callback(info[2].As<v8::Function>());
