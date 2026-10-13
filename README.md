@@ -35,14 +35,18 @@ See `test/test.js` for usage.
 ### setTags(path, tags, callback)
 - `path` - Path of the file/directory to set tags.
 - `tags` - Array of tags to assign.
-- `callback` - This callback is called with one argument `(err)`.
+- `callback` - This callback is called with two arguments `(err, tags)` where
+    `tags` is the array of tags that was set (deduplicated, in no particular
+    order).
 
 ### addTags(path, tags, callback)
 - `path` - Path of the file/directory to add tags.
 - `tags` - Array of tags to add.
-- `callback` - This callback is called with one argument `(err)`.
+- `callback` - This callback is called with `(err)`. `err` is an `Error` on
+    failure and `undefined` on success.
 
 ### removeTags(path, tags, callback)
 - `path` - Path of the file/directory to remove tags.
 - `tags` - Array of tags to remove.
-- `callback` - This callback is called with one argument `(err)`.
+- `callback` - This callback is called with `(err)`. `err` is an `Error` on
+    failure and `undefined` on success.
